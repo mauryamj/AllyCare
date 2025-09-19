@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "987378657557",
+    "project_id": "allycare-b28bf",
+    "storage_bucket": "allycare-b28bf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:987378657557:android:0342beec8b141c720be11c",
+        "android_client_info": {
+          "package_name": "com.example.allycare"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCftZcABXRsWvjoCnXTL3mr-Z96wPiVk9M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
