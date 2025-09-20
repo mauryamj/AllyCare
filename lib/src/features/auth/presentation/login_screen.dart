@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../provider/auth_providers.dart';
+import 'providers/auth_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -28,97 +28,111 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> tryLogin() async {
+    if (controllerEmail.text.isEmpty || controllerPassword.text.isEmpty) {
+      setState(() => errorMessage = "Email & password cannot be empty.");
+      return;
+    }
+
     setState(() {
       errorMessage = '';
       isLoading = true;
     });
+
     final svc = ref.read(authServiceProvider);
     final email = controllerEmail.text.trim();
     final password = controllerPassword.text.trim();
+
     try {
       await svc.signIn(email: email, password: password);
+
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/assessments');
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found' || e.code == 'invalid-credential') {
-        setState(() {
-          isRegisterMode = true;
-          errorMessage = 'No account found — create one below.';
-        });
-      } else if (e.code == 'wrong-password') {
-        setState(() {
-          errorMessage = 'Wrong password, try again.';
-        });
-      } else if (e.code == 'invalid-email') {
-        setState(() {
-          errorMessage = 'Please enter a valid email address.';
-        });
-      } else {
-        setState(() {
-          errorMessage = e.message ?? 'Login failed';
-        });
-      }
+      setState(() {
+        switch (e.code) {
+          case 'user-not-found':
+          case 'invalid-credential':
+            isRegisterMode = true;
+            errorMessage = 'No account found — create one below.';
+            break;
+          case 'wrong-password':
+            errorMessage = 'Wrong password, try again.';
+            break;
+          case 'invalid-email':
+            errorMessage = 'Please enter a valid email address.';
+            break;
+          default:
+            errorMessage = e.message ?? 'Login failed';
+        }
+      });
     } catch (e) {
-      setState(() {
-        errorMessage = e.toString();
-      });
+      setState(() => errorMessage = 'Unexpected error: ${e.toString()}');
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
   }
 
   Future<void> register() async {
+    if (controllerEmail.text.isEmpty ||
+        controllerPassword.text.isEmpty ||
+        controllerName.text.isEmpty) {
+      setState(() => errorMessage = "All fields are required.");
+      return;
+    }
+
     setState(() {
       errorMessage = '';
       isLoading = true;
     });
+
     final svc = ref.read(authServiceProvider);
     final email = controllerEmail.text.trim();
     final password = controllerPassword.text.trim();
     final name = controllerName.text.trim();
+
     try {
       await svc.createAccount(
         email: email,
         password: password,
         displayName: name.isEmpty ? null : name,
       );
+
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/assessments');
     } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message ?? 'Registration failed';
-      });
+      setState(() => errorMessage = e.message ?? 'Registration failed');
     } catch (e) {
-      setState(() {
-        errorMessage = e.toString();
-      });
+      setState(() => errorMessage = 'Unexpected error: ${e.toString()}');
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) setState(() => isLoading = false);
     }
   }
 
   Future<void> resetPassword() async {
+    if (controllerEmail.text.isEmpty) {
+      setState(() => errorMessage = "Enter your email first.");
+      return;
+    }
+
     setState(() {
       errorMessage = '';
       isLoading = true;
     });
+
     final svc = ref.read(authServiceProvider);
     final email = controllerEmail.text.trim();
+
     try {
       await svc.resetPassword(email: email);
-      setState(() {
-        errorMessage = 'Password reset email sent';
-      });
+      setState(() => errorMessage = 'Password reset email sent.');
     } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message ?? 'Error sending reset email';
-      });
+      setState(() => errorMessage = e.message ?? 'Error sending reset email');
+    } catch (e) {
+      setState(() => errorMessage = 'Unexpected error: ${e.toString()}');
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) setState(() => isLoading = false);
     }
   }
 
