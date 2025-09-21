@@ -78,4 +78,4 @@ This modular separation follows **Clean Architecture principles**, making the pr
 
 | Login Screen | Assessments | Tablet View |
 |--------------|-------------|-------------|
-| ![Login](assets/images/Screenshots/Screenshot_2025-09-21-17-04-26-04_aacedf86ff6e8d8501441212894ef527.jpg) | ![Assessments](assets/images/Screenshots/Screenshot_2025-09-21-17-04-32-57_aacedf86ff6e8d8501441212894ef527.jpg) | ![Tablet](assets/images/Screenshots/Screenshot_2025-09-21-17-03-01-58_aacedf86ff6e8d8501441212894ef527.jpg) |
+| ![Tablet](assets/images/Screenshots/Screenshot_2025-09-21-17-03-01-58_aacedf86ff6e8d8501441212894ef527.jpg) | ![Assessments](assets/images/Screenshots/Screenshot_2025-09-21-17-04-32-57_aacedf86ff6e8d8501441212894ef527.jpg) | ![Login](assets/images/Screenshots/Screenshot_2025-09-21-17-04-26-04_aacedf86ff6e8d8501441212894ef527.jpg) |
